@@ -1,6 +1,6 @@
 # PR Body Template (EN)
 
-Replace each `<...>` with real content. Do not delete sections that do not apply; write "None" instead. Keep the section order and headings unchanged. The content must match the KR template.
+Replace each `<...>` with real content. Do not delete sections that do not apply; write "None" instead. Keep the section order and headings unchanged. Use this only when English is requested; the content must match the KR template.
 
 ---
 

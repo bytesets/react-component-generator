@@ -1,9 +1,41 @@
 {
   "skill_name": "create-pr",
   "evals": [
-    {"id": 0, "prompt": "/private/tmp/claude-501/-Users-nhn-Desktop-react-component-generator-leader/69f2547f-b01e-4fbe-bd39-3fd02379fb3f/scratchpad/create-pr-workspace/fixtures/feature 저장소에서 현재 브랜치 PR 만들어줘. 리뷰 요청할 거라 한국어 먼저, 영어는 아래에 써줘. (테스트용이라 실제 push나 PR 생성은 하지 말고 본문 초안만 보여줘)", "expected_output": "KR 본문이 위, --- 아래 EN 본문. 제목은 conventional 형식. 커밋 2개 반영. push/PR 미실행.", "files": []},
-    {"id": 1, "prompt": "/private/tmp/claude-501/-Users-nhn-Desktop-react-component-generator-leader/69f2547f-b01e-4fbe-bd39-3fd02379fb3f/scratchpad/create-pr-workspace/fixtures/bugfix 에서 작업한 거 PR 올리려는데 본문 좀 써줘. 한국어랑 영어 둘 다 필요해. (실제 push나 PR 생성은 하지 말고 본문 초안만)", "expected_output": "fix 성격의 KR/EN 이중 언어 본문. 검증 결과 정직하게 기재.", "files": []},
-    {"id": 2, "prompt": "/private/tmp/claude-501/-Users-nhn-Desktop-react-component-generator-leader/69f2547f-b01e-4fbe-bd39-3fd02379fb3f/scratchpad/create-pr-workspace/fixtures/onmain 저장소에서 PR 만들어줘. (실제 push나 PR 생성은 하지 말 것)", "expected_output": "기본 브랜치(main)에서는 PR을 만들 수 없다고 알리고 중단. 본문을 만들지 않음.", "files": []},
-    {"id": 3, "prompt": "/private/tmp/claude-501/-Users-nhn-Desktop-react-component-generator-leader/69f2547f-b01e-4fbe-bd39-3fd02379fb3f/scratchpad/create-pr-workspace/fixtures/dirty 저장소 현재 브랜치 PR 올려줘. (실제 push나 PR 생성은 하지 말 것)", "expected_output": "커밋되지 않은 변경이 있음을 알리고 먼저 커밋하라고 안내하며 중단. 본문을 만들지 않음.", "files": []}
+    {
+      "id": 0,
+      "prompt": "/private/tmp/claude-501/-Users-nhn-Desktop-react-component-generator-leader/69f2547f-b01e-4fbe-bd39-3fd02379fb3f/scratchpad/create-pr-workspace/fixtures/feature 저장소에서 현재 브랜치 PR 만들어줘. 리뷰 요청할 거라 한국어 먼저, 영어는 아래에 써줘. (테스트용이라 실제 push나 PR 생성은 하지 말고 본문 초안만 보여줘)",
+      "expected_output": "KR 본문이 위, --- 아래 EN 본문. 제목은 conventional 형식. 커밋 2개 반영. push/PR 미실행.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "prompt": "/private/tmp/claude-501/-Users-nhn-Desktop-react-component-generator-leader/69f2547f-b01e-4fbe-bd39-3fd02379fb3f/scratchpad/create-pr-workspace/fixtures/bugfix 에서 작업한 거 PR 올리려는데 본문 좀 써줘. 한국어랑 영어 둘 다 필요해. (실제 push나 PR 생성은 하지 말고 본문 초안만)",
+      "expected_output": "fix 성격의 KR/EN 이중 언어 본문. 검증 결과 정직하게 기재.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "/private/tmp/claude-501/-Users-nhn-Desktop-react-component-generator-leader/69f2547f-b01e-4fbe-bd39-3fd02379fb3f/scratchpad/create-pr-workspace/fixtures/onmain 저장소에서 PR 만들어줘. (실제 push나 PR 생성은 하지 말 것)",
+      "expected_output": "기본 브랜치(main)에서는 PR을 만들 수 없다고 알리고 중단. 본문을 만들지 않음.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "/private/tmp/claude-501/-Users-nhn-Desktop-react-component-generator-leader/69f2547f-b01e-4fbe-bd39-3fd02379fb3f/scratchpad/create-pr-workspace/fixtures/dirty 저장소 현재 브랜치 PR 올려줘. (실제 push나 PR 생성은 하지 말 것)",
+      "expected_output": "커밋되지 않은 변경이 있음을 알리고 먼저 커밋하라고 안내하며 중단. 본문을 만들지 않음.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "/private/tmp/claude-501/-Users-nhn-Desktop-react-component-generator-leader/69f2547f-b01e-4fbe-bd39-3fd02379fb3f/scratchpad/create-pr-workspace/fixtures/feature 저장소 현재 브랜치로 PR 만들어줘. (실제 push나 PR 생성은 하지 말고 본문 초안만)",
+      "expected_output": "언어 언급이 없으므로 한국어 본문만 작성. 영어 섹션과 --- 구분선 없음. 제목도 한국어.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "/private/tmp/claude-501/-Users-nhn-Desktop-react-component-generator-leader/69f2547f-b01e-4fbe-bd39-3fd02379fb3f/scratchpad/create-pr-workspace/fixtures/bugfix 저장소 PR 본문 써줘. 영어로도 필요해. (실제 push나 PR 생성은 하지 말고 본문 초안만)",
+      "expected_output": "KR 먼저, --- 아래에 EN. 푸터는 맨 끝에 한 번만.",
+      "files": []
+    }
   ]
 }
