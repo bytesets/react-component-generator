@@ -14,13 +14,13 @@ const PROVIDER_CONFIG = {
 } as const;
 
 const parseProvider = (raw: unknown): Provider | null =>
-  typeof raw === 'string' && raw in PROVIDER_CONFIG ? (raw as Provider) : null;
+  typeof raw === 'string' && Object.hasOwn(PROVIDER_CONFIG, raw) ? (raw as Provider) : null;
 
 const parseApiKeys = (raw: unknown): Partial<Record<Provider, string>> | null => {
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return null;
   const keys: Partial<Record<Provider, string>> = {};
   for (const [provider, key] of Object.entries(raw)) {
-    if (provider in PROVIDER_CONFIG && typeof key === 'string') keys[provider as Provider] = key;
+    if (Object.hasOwn(PROVIDER_CONFIG, provider) && typeof key === 'string') keys[provider as Provider] = key;
   }
   return keys;
 };
@@ -33,6 +33,7 @@ function App() {
     STORAGE_KEYS.apiKeys,
     {},
     parseApiKeys,
+    'session', // API 키는 탭을 닫으면 사라지도록 sessionStorage에만 둔다.
   );
   const apiKey = apiKeys[provider] ?? '';
   const setApiKey = (key: string) => setApiKeys((prev) => ({ ...prev, [provider]: key }));
@@ -53,13 +54,13 @@ function App() {
 
   const hasEnvKey = envKeys[provider];
 
-  const handleGenerate = (prompt: string) => {
+  const handleGenerate = async (prompt: string) => {
     if (!apiKey.trim() && !hasEnvKey) {
       alert(`${PROVIDER_CONFIG[provider].label} API 키를 입력하거나 .env에 설정해주세요.`);
       return;
     }
-    addPrompt(prompt);
-    generate(prompt, apiKey || undefined, provider);
+    const ok = await generate(prompt, apiKey || undefined, provider);
+    if (ok) addPrompt(prompt);
   };
 
   const activeProvider = PROVIDER_CONFIG[provider].label;

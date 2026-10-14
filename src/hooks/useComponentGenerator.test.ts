@@ -66,3 +66,44 @@ describe('useComponentGenerator 영속화', () => {
     expect(result.current.components).toEqual([]);
   });
 });
+
+describe('useComponentGenerator 견고성', () => {
+  it('createdAt이 null이면 손상된 데이터로 보고 빈 목록으로 시작한다', () => {
+    localStorage.setItem(STORAGE_KEYS.components, JSON.stringify([{ ...saved[0], createdAt: null }]));
+    const { result } = renderHook(() => useComponentGenerator());
+    expect(result.current.components).toEqual([]);
+  });
+
+  it('목록은 최대 50개까지만 유지한다(가장 오래된 것부터 버린다)', async () => {
+    const many = Array.from({ length: 50 }, (_, i) => ({ ...saved[0], id: `c${i}` }));
+    localStorage.setItem(STORAGE_KEYS.components, JSON.stringify(many));
+    const { result } = renderHook(() => useComponentGenerator());
+
+    await act(async () => {
+      await result.current.generate('새 것', 'key', 'google');
+    });
+
+    expect(result.current.components).toHaveLength(50);
+    expect(result.current.components[0].prompt).toBe('새 것');
+    expect(result.current.components.some((c) => c.id === 'c49')).toBe(false);
+  });
+
+  it('generate는 성공하면 true를 반환한다', async () => {
+    const { result } = renderHook(() => useComponentGenerator());
+    let ok: boolean | undefined;
+    await act(async () => {
+      ok = await result.current.generate('p', 'key', 'google');
+    });
+    expect(ok).toBe(true);
+  });
+
+  it('generate는 실패하면 false를 반환한다', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => ({ ok: false, json: async () => ({ error: 'boom' }) })));
+    const { result } = renderHook(() => useComponentGenerator());
+    let ok: boolean | undefined;
+    await act(async () => {
+      ok = await result.current.generate('p', 'key', 'google');
+    });
+    expect(ok).toBe(false);
+  });
+});
