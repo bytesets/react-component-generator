@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import { PromptInput } from './components/PromptInput';
 import { ComponentCard } from './components/ComponentCard';
 import { useComponentGenerator } from './hooks/useComponentGenerator';
+import { usePersistentState } from './hooks/usePersistentState';
+import { usePromptHistory } from './hooks/usePromptHistory';
+import { STORAGE_KEYS } from './utils/storage';
 import type { Provider } from './types';
 import './App.css';
 
@@ -10,10 +13,30 @@ const PROVIDER_CONFIG = {
   google: { label: 'Google', placeholder: 'AIza...' },
 } as const;
 
+const parseProvider = (raw: unknown): Provider | null =>
+  typeof raw === 'string' && raw in PROVIDER_CONFIG ? (raw as Provider) : null;
+
+const parseApiKeys = (raw: unknown): Partial<Record<Provider, string>> | null => {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return null;
+  const keys: Partial<Record<Provider, string>> = {};
+  for (const [provider, key] of Object.entries(raw)) {
+    if (provider in PROVIDER_CONFIG && typeof key === 'string') keys[provider as Provider] = key;
+  }
+  return keys;
+};
+
 function App() {
-  const [apiKey, setApiKey] = useState('');
   const [showKey, setShowKey] = useState(false);
-  const [provider, setProvider] = useState<Provider>('google');
+  const [provider, setProvider] = usePersistentState<Provider>(STORAGE_KEYS.provider, 'google', parseProvider);
+  // Provider마다 키를 따로 보관해, Provider를 바꿔도 다른 쪽 키가 사라지지 않게 한다.
+  const [apiKeys, setApiKeys] = usePersistentState<Partial<Record<Provider, string>>>(
+    STORAGE_KEYS.apiKeys,
+    {},
+    parseApiKeys,
+  );
+  const apiKey = apiKeys[provider] ?? '';
+  const setApiKey = (key: string) => setApiKeys((prev) => ({ ...prev, [provider]: key }));
+  const { history, addPrompt } = usePromptHistory();
   const [envKeys, setEnvKeys] = useState<Record<Provider, boolean>>({
     anthropic: false,
     google: false,
@@ -35,12 +58,8 @@ function App() {
       alert(`${PROVIDER_CONFIG[provider].label} API 키를 입력하거나 .env에 설정해주세요.`);
       return;
     }
+    addPrompt(prompt);
     generate(prompt, apiKey || undefined, provider);
-  };
-
-  const handleProviderChange = (newProvider: Provider) => {
-    setProvider(newProvider);
-    setApiKey('');
   };
 
   const activeProvider = PROVIDER_CONFIG[provider].label;
@@ -68,7 +87,7 @@ function App() {
 
       <main className="workspace">
         <section className="composer-panel" aria-label="컴포넌트 생성">
-          <PromptInput onGenerate={handleGenerate} isLoading={isLoading} />
+          <PromptInput onGenerate={handleGenerate} isLoading={isLoading} history={history} />
         </section>
 
         <aside className="settings-panel" aria-label="실행 설정">
@@ -81,7 +100,7 @@ function App() {
             <select
               id="provider"
               value={provider}
-              onChange={(e) => handleProviderChange(e.target.value as Provider)}
+              onChange={(e) => setProvider(e.target.value as Provider)}
             >
               {Object.entries(PROVIDER_CONFIG).map(([key, { label }]) => (
                 <option key={key} value={key}>
