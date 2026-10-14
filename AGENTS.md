@@ -16,6 +16,12 @@
 
 - API 키를 소스에 하드코딩하거나 로그·응답에 노출하지 않는다. 키는 `.env`에만 두며 `.env`는 `.gitignore` 대상이다(`.gitignore`).
 - `.env`를 읽거나 커밋하지 않는다. 변수 목록이 필요하면 `.env.example`을 본다.
+- 민감 파일은 읽거나 수정하지 않는다. `.claude/settings.json`의 `permissions.deny`가 같은 범위를 차단한다. 규칙을 바꿀 때는 두 곳을 함께 갱신한다.
+  - 환경변수: `.env`, `.env.local`, `.env.development`, `.env.production`, `.env.test`, `.env.*.local` (`.env.example`은 예외)
+  - 이름 패턴: `*credential*`, `*secret*`
+  - 키·인증서: `*.pem`, `*.key`, `*.p12`, `*.pfx`, `id_rsa*`, `id_ed25519*`
+  - 인증 설정: `.npmrc`, `~/.ssh/**`, `~/.aws/**`
+  - Bash의 `cat`, `head`, `grep` 등으로 우회해 내용을 읽지 않는다. deny 규칙은 `cat .env*`만 막는다.
 
 ### Do's & Don'ts
 
